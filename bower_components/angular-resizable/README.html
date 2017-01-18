@@ -1,0 +1,88 @@
+<h1 id="angular-resizable"><a href="#angular-resizable" class="headerlink" title="angular-resizable"></a>angular-resizable</h1><p>A directive for creating resizable containers.</p>
+<h2 id="Why"><a href="#Why" class="headerlink" title="Why?"></a>Why?</h2><p>All other resizable directive concepts I came across include layout logic in the directive. I wanted a directive that only handled the resize logic. This way, the layout logic is quarantined to the CSS.</p>
+<h2 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h2><ol>
+<li><code>npm install angular-resizable</code> or <code>bower install angular-resizable</code> or clone/download this repo</li>
+<li>Include <code>angular-resizable.min.js</code> in your project.</li>
+<li>Include <code>angular-resizable.min.css</code> in your project as well (this provides default styling for the resize handles).</li>
+<li>Then include the module in your app: <code>angular.module(&#39;app&#39;, [&#39;angularResizable&#39;])</code></li>
+<li>Use it: <code>&lt;section resizable r-directions=&quot;[&#39;bottom&#39;, &#39;right&#39;]&quot; r-flex=&quot;true&quot;&gt;</code></li>
+</ol>
+<p>Include any sides you want to be resizable in an array inside <code>r-directions</code>. Accepts ‘top’,’right’,’bottom’, and ‘left’. You can style the handles however you want. Just override the styles in the css in your own stylesheet.</p>
+<h2 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h2><table>
+<thead>
+<tr>
+<th>Attributes</th>
+<th>Default</th>
+<th>Accepts</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rDirections</td>
+<td>[‘right’]</td>
+<td>[‘top’, ‘right’, ‘bottom’, ‘left’,]</td>
+<td>Determines which sides of the element are resizable.</td>
+</tr>
+<tr>
+<td>rFlex</td>
+<td>false</td>
+<td>boolean</td>
+<td>Set as true if you are using flexbox. <a href="http://codepen.io/Reklino/pen/raRaXq">See this codepen</a>.</td>
+</tr>
+<tr>
+<td>rCenteredX</td>
+<td>false</td>
+<td>boolean</td>
+<td>If set as true, the velocity of horizontal resizing will be doubled.</td>
+</tr>
+<tr>
+<td>rCenteredY</td>
+<td>false</td>
+<td>boolean</td>
+<td>If set as true, the velocity of vertical resizing will be doubled.</td>
+</tr>
+<tr>
+<td>rWidth</td>
+<td>false</td>
+<td>integer or $scope variable</td>
+<td>If set, the resizable element will be rendered with a predefined width relative to this value in pixels and a watcher will be set on the ‘rWidth’ attribute. <a href="http://codepen.io/Reklino/pen/EjKXqg">See this codepen</a>.</td>
+</tr>
+<tr>
+<td>rHeight</td>
+<td>false</td>
+<td>integer or $scope variable</td>
+<td>If set, the resizable element will be rendered with a predefined height relative to this value in pixels and a watcher will be set on the ‘rHeight’ attribute. <a href="http://codepen.io/Reklino/pen/EjKXqg">See this codepen</a>.</td>
+</tr>
+<tr>
+<td>rGrabber</td>
+<td><code>&lt;span&gt;&lt;/span&gt;</code></td>
+<td>string</td>
+<td>Defines custom inner html for the grabber.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Events"><a href="#Events" class="headerlink" title="Events"></a>Events</h2><p>For an example using the events, <a href="http://codepen.io/Reklino/pen/EjKXqg">see this codepen</a>.</p>
+<h3 id="angular-resizable-resizeStart"><a href="#angular-resizable-resizeStart" class="headerlink" title="angular-resizable.resizeStart"></a>angular-resizable.resizeStart</h3><p>This event is emitted at the beginning of a resize with the following info object:</p>
+<ul>
+<li><code>info.width</code> : The width of the directive at time of resize start. **Will be false if resizing vertically</li>
+<li><code>info.height</code> : The height of the directive at time of resize start. **Will be false if resizing horizontally</li>
+<li><code>info.id</code> : The id of the directive. **Will be false if there is no id set.</li>
+</ul>
+<h3 id="angular-resizable-resizing"><a href="#angular-resizable-resizing" class="headerlink" title="angular-resizable.resizing"></a>angular-resizable.resizing</h3><p>This event is emitted during the resizing of the element with the following object as an argument:</p>
+<ul>
+<li><code>info.width</code> : The width of the directive at time of resize end. **Will be false if resizing vertically</li>
+<li><code>info.height</code> : The height of the directive at time of resize end. **Will be false if resizing horizontally</li>
+<li><code>info.id</code> : The id of the directive. **Will be false if there is no id</li>
+</ul>
+<h3 id="angular-resizable-resizeEnd"><a href="#angular-resizable-resizeEnd" class="headerlink" title="angular-resizable.resizeEnd"></a>angular-resizable.resizeEnd</h3><p>This event is emitted at the end of a resize with the following object as an argument:</p>
+<ul>
+<li><code>info.width</code> : The width of the directive at time of resize end. **Will be false if resizing vertically</li>
+<li><code>info.height</code> : The height of the directive at time of resize end. **Will be false if resizing horizontally</li>
+<li><code>info.id</code> : The id of the directive. **Will be false if there is no id set.</li>
+</ul>
+<h2 id="version-notes"><a href="#version-notes" class="headerlink" title="version notes"></a>version notes</h2><h3 id="1-2-0"><a href="#1-2-0" class="headerlink" title="1.2.0"></a>1.2.0</h3><ul>
+<li>Add angular-resizable.resizing event (see pull request #7)</li>
+<li>Add attribute for providing custom inner html to the grabber element (see pull request #7)</li>
+</ul>
+<h2 id="License"><a href="#License" class="headerlink" title="License"></a>License</h2><p>MIT</p>

@@ -1,0 +1,160 @@
+<h1 id="Angular-Tooltips"><a href="#Angular-Tooltips" class="headerlink" title="Angular Tooltips"></a>Angular Tooltips</h1><p><a href="https://gitter.im/720kb/angular-tooltips?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/720kb/angular-tooltips"></a></p>
+<p>Angular Tooltips is an AngularJS directive that generates a tooltip on your element.</p>
+<p>The angular tooltips is developed by <a href="http://720kb.net">720kb</a>.</p>
+<p>##Requirements</p>
+<p>AngularJS v1.3+</p>
+<p>##Screen<br><img src="http://i.imgur.com/GjUwCat.png" alt="Angular tooltips"></p>
+<p>###Browser support</p>
+<table>
+<thead>
+<tr>
+<th><img src="https://raw.github.com/alrra/browser-logos/master/chrome/chrome_48x48.png" alt="Chrome"></th>
+<th><img src="https://raw.github.com/alrra/browser-logos/master/firefox/firefox_48x48.png" alt="Firefox"></th>
+<th><img src="https://raw.github.com/alrra/browser-logos/master/internet-explorer/internet-explorer_48x48.png" alt="IE"></th>
+<th><img src="https://raw.github.com/alrra/browser-logos/master/opera/opera_48x48.png" alt="Opera"></th>
+<th><img src="https://raw.github.com/alrra/browser-logos/master/safari/safari_48x48.png" alt="Safari"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> ✔</td>
+<td>✔</td>
+<td>IE10 +</td>
+<td>✔</td>
+<td>✔</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Load"><a href="#Load" class="headerlink" title="Load"></a>Load</h2><p>To use the directive, include the Angular Tooltips javascript and css files in your web page:</p>
+<pre><code class="html"><span class="meta">&lt;!DOCTYPE HTML&gt;</span>
+<span class="tag">&lt;<span class="name">html</span>&gt;</span>
+<span class="tag">&lt;<span class="name">head</span>&gt;</span>
+  <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">"dist/angular-tooltips.min.css"</span> <span class="attr">rel</span>=<span class="string">"stylesheet"</span> <span class="attr">type</span>=<span class="string">"text/css"</span> /&gt;</span>
+<span class="tag">&lt;/<span class="name">head</span>&gt;</span>
+<span class="tag">&lt;<span class="name">body</span> <span class="attr">ng-app</span>=<span class="string">"app"</span>&gt;</span>
+  //.....
+  <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"dist/angular-tooltips.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">body</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">html</span>&gt;</span>
+</code></pre>
+<p>##Installation</p>
+<p>####Bower</p>
+<pre><code>$ bower install angular-tooltips --save
+</code></pre><p>####Npm</p>
+<pre><code>$ npm install angular-tooltips --save
+</code></pre><p><em>then load the js files in your html</em></p>
+<p>####Add module dependency</p>
+<p>Add the 720kb.tooltips module dependency</p>
+<pre><code class="js">angular.module(<span class="string">'app'</span>, [
+  <span class="string">'720kb.tooltips'</span>
+ ]);
+</code></pre>
+<p>Call the directive wherever you want in your html page</p>
+<pre><code class="html">
+<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span> <span class="attr">tooltips</span> <span class="attr">tooltip-template</span>=<span class="string">"tooltip"</span>&gt;</span>Tooltip me<span class="tag">&lt;/<span class="name">a</span>&gt;</span>
+</code></pre>
+<p>##Doc</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tooltip-side=””</td>
+<td>String(‘left’,’right’,’top’,’bottom’)</td>
+<td>‘top’</td>
+<td>Set your tooltip to show on <code>left</code> or <code>right</code> or <code>top</code> or <code>bottom</code> position</td>
+</tr>
+<tr>
+<td>tooltip-template=””</td>
+<td>String()</td>
+<td>‘’</td>
+<td>Set your tooltip template (HTML or just Text)</td>
+</tr>
+<tr>
+<td>tooltip-template-url=””</td>
+<td>String()</td>
+<td>‘’</td>
+<td>Set your external tooltip template PATH</td>
+</tr>
+<tr>
+<td>tooltip-smart=””</td>
+<td>String(Boolean)</td>
+<td>false</td>
+<td>Set the tooltip to automatically search the best position on the screen</td>
+</tr>
+<tr>
+<td>tooltip-show-trigger=””</td>
+<td>String(‘event1 event2’)</td>
+<td>‘mouseover’</td>
+<td>Show the tooltip on specific event/events</td>
+</tr>
+<tr>
+<td>tooltip-hide-trigger=””</td>
+<td>String(‘event1 event2’)</td>
+<td>‘mouseleave’</td>
+<td>Hide the tooltip on specific event/events</td>
+</tr>
+<tr>
+<td>tooltip-close-button=””</td>
+<td>String(Boolean)</td>
+<td>false</td>
+<td>Enable the tooltip close button</td>
+</tr>
+<tr>
+<td>tooltip-class=””</td>
+<td>String()</td>
+<td>‘’</td>
+<td>Set custom tooltip CSS class/classes</td>
+</tr>
+<tr>
+<td>tooltip-size=””</td>
+<td>String(‘large’, ‘small’)</td>
+<td>‘medium’</td>
+<td>Set your tooltip dimensions</td>
+</tr>
+<tr>
+<td>tooltip-speed=””</td>
+<td>String(‘fast’, ‘slow’, ‘medium’)</td>
+<td>‘medium’</td>
+<td>Set your tooltip show &amp; hide transition speed</td>
+</tr>
+<tr>
+<td>tooltip-hidden=””</td>
+<td>String(Boolean)</td>
+<td>false</td>
+<td>Hide (at all) the tooltip</td>
+</tr>
+<tr>
+<td>tooltip-append-to-body=””</td>
+<td>String(Boolean)</td>
+<td>false</td>
+<td>This attribute clones the tooltip and append this directly on body. This enables the tooltip position also, for instance, if you have an scrolling area. <strong>This option does heavy javascript calculation.</strong></td>
+</tr>
+</tbody>
+</table>
+<p>##Globals<br>Sometimes you may need to set all of your tooltips options in one place, you can achieve this using <code>tooltipsConfProvider</code> like this:</p>
+<pre><code class="javascript">.config([<span class="string">'tooltipsConfProvider'</span>, <span class="function"><span class="keyword">function</span> <span class="title">configConf</span>(<span class="params">tooltipsConfProvider</span>) </span>{
+  tooltipsConfProvider.configure({
+    <span class="string">'smart'</span>:<span class="literal">true</span>,
+    <span class="string">'size'</span>:<span class="string">'large'</span>,
+    <span class="string">'speed'</span>: <span class="string">'slow'</span>,
+    <span class="comment">//etc...</span>
+  });
+}])
+</code></pre>
+<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><p>###<a href="https://720kb.github.io/angular-tooltips">Live demo</a></p>
+<p>##Theming<br>You can create your own theme by editing the default SASS file <code>lib/angular-tooltips.scss</code> or just editing the default CSS file <code>dist/angular-tooltips.css</code>.</p>
+<p>##Contributing</p>
+<p>We will be much grateful if you help us making this project to grow up.<br>Feel free to contribute by forking, opening issues, pull requests etc.</p>
+<h2 id="License"><a href="#License" class="headerlink" title="License"></a>License</h2><p>The MIT License (MIT)</p>
+<p>Copyright (c) 2014 Filippo Oretti, Dario Andrei</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>

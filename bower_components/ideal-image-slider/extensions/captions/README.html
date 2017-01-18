@@ -1,0 +1,27 @@
+<h1 id="Ideal-Image-Slider-Captions-Extension"><a href="#Ideal-Image-Slider-Captions-Extension" class="headerlink" title="Ideal Image Slider - Captions Extension"></a>Ideal Image Slider - Captions Extension</h1><p>Adds captions support to the Ideal Image Slider.</p>
+<h2 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h2><ul>
+<li><a href="https://github.com/gilbitron/Ideal-Image-Slider">Ideal Image Slider</a> v1.3.0+</li>
+</ul>
+<h2 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h2><p>Captions are taken from the <code>alt</code> attribute of the image tag or, if defined, the <code>data-caption</code><br>attribute. The <code>data-caption</code> attribute will override the <code>alt</code> attribute. You can add an optional<br>title to your caption which is taken from the <code>title</code> attribute of the image tag.</p>
+<p>While you can put HTML in the <code>alt</code> attribute it is better to create an external caption in a separate<br>div and put the selector in the <code>data-caption</code> attribute (e.g. <code>data-caption=&quot;#my-caption&quot;</code>). Make sure<br>and hide the external caption container so it is not visible on the page.</p>
+<pre><code class="html"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"slider"</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"img/1.jpg"</span> <span class="attr">title</span>=<span class="string">"Baloons"</span> <span class="attr">alt</span>=<span class="string">"This is the caption content"</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">img</span> <span class="attr">data-src</span>=<span class="string">"img/2.jpg"</span> <span class="attr">src</span>=<span class="string">""</span> <span class="attr">title</span>=<span class="string">"Skateboard"</span> <span class="attr">alt</span>=<span class="string">"Captions &lt;em&gt;can&lt;/em&gt; contain &lt;strong&gt;HTML&lt;/strong&gt;"</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">img</span> <span class="attr">data-src</span>=<span class="string">"img/3.jpg"</span> <span class="attr">src</span>=<span class="string">""</span> <span class="attr">alt</span>=<span class="string">"This will be overridden"</span> <span class="attr">data-caption</span>=<span class="string">"#caption-3"</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">img</span> <span class="attr">data-src</span>=<span class="string">"img/4.jpg"</span> <span class="attr">src</span>=<span class="string">""</span> <span class="attr">title</span>=<span class="string">"A title without a caption"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">div</span>&gt;</span>
+
+<span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"caption-3"</span> <span class="attr">style</span>=<span class="string">"display:none;"</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">h3</span>&gt;</span>External Caption<span class="tag">&lt;/<span class="name">h3</span>&gt;</span>
+    <span class="tag">&lt;<span class="name">p</span>&gt;</span>When using <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"#"</span>&gt;</span>HTML in captions<span class="tag">&lt;/<span class="name">a</span>&gt;</span> it might be better to use an external caption.<span class="tag">&lt;/<span class="name">p</span>&gt;</span>
+<span class="tag">&lt;/<span class="name">div</span>&gt;</span>
+</code></pre>
+<p>The <code>iis-captions.js</code> must be included after <code>ideal-image-slider.js</code>. The styles for the captions<br>extension are included in the theme CSS.</p>
+<pre><code class="html"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"ideal-image-slider.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>
+<span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"extensions/captions/iis-captions.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>
+<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript">
+<span class="keyword">var</span> slider = <span class="keyword">new</span> IdealImageSlider.Slider(<span class="string">'#slider'</span>);
+slider.addCaptions();
+slider.start();
+</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span>
+</code></pre>
