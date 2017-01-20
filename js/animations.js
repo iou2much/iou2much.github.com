@@ -1,1 +1,0 @@
-angular.module('blogAnimations', ['ngAnimate']);
