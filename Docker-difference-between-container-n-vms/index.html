@@ -1,0 +1,96 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="AI rules.."><title>【译文】Docker:容器与虚拟机的差异 | Coders' Lab</title><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/5.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/grids-responsive-min.css"><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.1"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">【译文】Docker:容器与虚拟机的差异</h1><a id="logo" href="/.">Coders' Lab</a><p class="description">focus on AI</p></div><div id="nav-menu"><a href="/"><i class="fa icon-home"> 首页</i></a><a href="/ai_notes_html/"><i class="fa icon-tree"> AI笔记</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">【译文】Docker:容器与虚拟机的差异</h1><div class="post-meta">Jan 10, 2016<span> | </span><span class="category"><a href="/categories/Translation/">Translation</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> Hits</span></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Docker容器"><span class="toc-number">1.</span> <span class="toc-text">Docker容器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#术语"><span class="toc-number">2.</span> <span class="toc-text">术语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器-vs-全虚拟化"><span class="toc-number">3.</span> <span class="toc-text">容器 vs 全虚拟化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注意"><span class="toc-number">4.</span> <span class="toc-text">注意</span></a></li></ol></div></div><div class="post-content"><p>虚拟机（VM）是对某计算机操作系统的模拟，虚拟机的实现是基于计算机虚拟化的架构和指令，具体可能需要特定的硬件、软件、或两者同时的支持。</p>
+<p>本文将探讨Docker容器和全虚拟化之间的区别。（<a href="https://www.blogger.com/blogger.g?blogID=748094882401183761#Note_1" target="_blank" rel="external">注1</a>）<br><img src="http://7xnyt8.com1.z0.glb.clouddn.com/dockerContainer.jpg" alt="图1"></p>
+<h2 id="Docker容器"><a href="#Docker容器" class="headerlink" title="Docker容器"></a>Docker容器</h2><p>Docker是一个创建封装好的隔离计算机环境，每个封装好的环境被称为容器。[2,7]</p>
+<p>启动一个Docker容器非常迅速，因为：</p>
+<ul>
+<li>每个容器共享宿主系统的内核。<ul>
+<li>然而，各个容器都运行着一个Linux的副本</li>
+<li>这意味着没有<strong>hypervisor</strong>，而且<strong>不需要额外的启动</strong>。</li>
+</ul>
+</li>
+</ul>
+<p>对比之下，KVM, VirtualBox 或者 VMware之类的虚拟机实现是不同的。</p>
+<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><ul>
+<li><p><strong>宿主系统</strong> vs <strong>客户系统</strong></p>
+<ul>
+<li>宿主系统<br>是直接安装在计算机上的原生系统   </li>
+<li>客户系统<br> 是安装在一个虚拟机上，或者在宿主机的一个分区上的系统<ul>
+<li>如果是安装在虚拟机上，客户系统可以与宿主系统不同。</li>
+<li>如果是安装在一个磁盘分区上，客户系统必须与宿主系统相同。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a href="https://en.wikipedia.org/wiki/Hypervisor" target="_blank" rel="external">Hypervisor (虚拟机监视器)</a></p>
+<ul>
+<li>是一种计算机软件、固件或者硬件，用于创建并运行虚拟机的。</li>
+<li>一个系统中安装着hypervisor，里边运行着一个或多个虚拟机，这个系统可被定义为宿主机。</li>
+<li>各个虚拟机被定义为客户机。</li>
+</ul>
+</li>
+<li><p><a href="https://en.wikipedia.org/wiki/Docker_(software" target="_blank" rel="external">Docker容器</a>)</p>
+<ul>
+<li>由Docker创建的一个封闭计算环境</li>
+<li>Linux平台上的Docker<ul>
+<li>基于<a href="https://en.wikipedia.org/wiki/Linux_kernel" target="_blank" rel="external">Linux内核</a>提供的组件构建的(特别是cgroups和namespaces) </li>
+<li>不像虚拟机，不需要包含一个独立的操作系统</li>
+</ul>
+</li>
+<li>非Linux平台上的Docker<ul>
+<li>使用<a href="https://en.wikipedia.org/wiki/Virtual_machine" target="_blank" rel="external">Linux虚拟机</a>去运行容器</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://docs.docker.com/reference/commandline/daemon/" target="_blank" rel="external">Docker守护进程</a><ul>
+<li>是管理容器的持久进程。</li>
+<li>使用<u>Linux特定的内核特性去实现</u>。</li>
+</ul>
+</li>
+</ul>
+<h2 id="容器-vs-全虚拟化"><a href="#容器-vs-全虚拟化" class="headerlink" title="容器 vs 全虚拟化"></a>容器 vs 全虚拟化</h2><p>全虚拟化的系统分配到的是独有的一组资源，只有极少量的资源会共享，是有<u>更强的隔离性</u>，但是更加重了（需要更加多的资源）。用Docker容器有弱些的隔离性，但是它们<u>更加轻量</u>，需要更少的资源，所以你可以毫不费力地启动上千个容器。</p>
+<p>基本上，Docker容器(详见<a href="https://www.blogger.com/blogger.g?blogID=748094882401183761#Note_1" target="_blank" rel="external">注1</a>)和全虚拟化VM有着本质上不同的目标</p>
+<ul>
+<li><p>VM是用于完全模拟一个外部环境</p>
+<ul>
+<li>在一个全虚拟化VM的实现上，Hypervisor主要作用是翻译客户系统和宿主系统之间的指令。</li>
+<li>每个虚拟机中，应用以及相关依赖运行在一个完整的操作系统上。</li>
+<li>如果你需要同时运行不同的操作系统（如Windows, OS/X 或 BSD），或者需要为需要平台的系统编译程序，那你需要的是一个全虚拟化VM的实现。<ul>
+<li>相反地，容器的系统(或者更准确来说，是内核)必须与宿主系统的一致，而且与容器和宿主间共享着。(详见<a href="https://www.blogger.com/blogger.g?blogID=748094882401183761#Note_1" target="_blank" rel="external">注1</a>)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>容器是用于使得应用具移植性，并能自包含</p>
+<ul>
+<li>各容器共享着宿主机的内核<ul>
+<li>这意味着没有hypervisor，而且不需要额外的系统启动。</li>
+<li>容器引擎负责启动或停止容器，这与虚拟机实现中的hypervisor类似。<ul>
+<li>然而，容器中运行的进程与宿主系统的进程是同行级别的，所以不会被相关的hypervisor杀掉。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a><a href="https://www.blogger.com/null" target="_blank" rel="external">注意</a></h2><p>在本文中，我们只关注了Linux平台下的Docker实现，换言之，我们讨论的是排除掉了非Linux平台(也就是Windows,Mac OS X等等)<br>因为Docker守护进程使用特定的Linux内核特性，你不能在Windows 或 Mac OS X直接运行原生的Docker。<br>在非Linux平台上，Docker使用<a href="https://en.wikipedia.org/wiki/Virtual_machine" target="_blank" rel="external">Linux虚拟机</a>去运行容器。</p>
+<p>图片来源<br><a href="http://blog.docker.com/2014/03/docker-0-9-introducing-execution-drivers-and-libcontainer/" target="_blank" rel="external">Docker Blog</a></p>
+<p>引用</p>
+<ol>
+<li><a href="http://stackoverflow.com/questions/16047306/how-is-docker-different-from-a-normal-virtual-machine" target="_blank" rel="external">How is Docker different from a normal virtual machine? </a>(Stackoverflow)</li>
+<li><a href="http://www.troubleshooters.com/linux/docker/docker_newbie.htm" target="_blank" rel="external">Newbie’s Overview of Docker</a></li>
+<li><a href="https://docs.docker.com/installation/" target="_blank" rel="external">Supported Installation</a> (Docker)</li>
+<li><a href="https://labs.vmware.com/vee2013/docs/p97.pdf" target="_blank" rel="external">EXTERIOR: Using Dual-VM Based External Shell for Guest-OS Introspection, Configuration, and Recovery</a></li>
+<li><a href="http://www.infoq.com/news/2014/08/vm-containers-performance" target="_blank" rel="external">Comparing Virtual Machines and Linux Containers Performance</a></li>
+<li><a href="http://domino.research.ibm.com/library/cyberdig.nsf/papers/0929052195DD819C85257D2300681E7B/$File/rc25482.pdf" target="_blank" rel="external">An Updated Performance Comparison of Virtual Machines and Linux Containers</a></li>
+<li><a href="http://xmlandmore.blogspot.com/2015/11/security-and-isolation-implementation.html" target="_blank" rel="external">Security and Isolation Implementation in Docker Containers</a></li>
+</ol>
+</div><script type="text/javascript" src="/js/share.js?v=0.1" async></script><a data-url="http://ai-code.tech/Docker-difference-between-container-n-vms/" data-id="ciy9g3pil001bk4ttjz8xeh7q" class="article-share-link">分享到</a><div class="tags"></div><div class="post-nav"><a href="/build-my-site-1/" class="pre">【debug.life构建手记】 ( 一 ) 基础设施搭建</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Translation/">Translation</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/Mac-OS-X/" style="font-size: 15px;">Mac OS X</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Openresty/" style="font-size: 15px;">Openresty</a> <a href="/tags/Aliyun/" style="font-size: 15px;">Aliyun</a> <a href="/tags/https/" style="font-size: 15px;">https</a> <a href="/tags/Nginx/" style="font-size: 15px;">Nginx</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/build-with-docker/">用Docker容器编译软件</a></li><li class="post-list-item"><a class="post-list-link" href="/startup-micro-service-with-ruby/">【译文】使用Ruby on Rails和Docker开始微服务之旅</a></li><li class="post-list-item"><a class="post-list-link" href="/what-would-docker-bring-to-your-team/">【译文】Docker会给你的开发团队带来什么变化？</a></li><li class="post-list-item"><a class="post-list-link" href="/how-to-use-docker-to-build-mapr-cluster/">【译文】如何使用Docker创建开箱即用的MapR集群</a></li><li class="post-list-item"><a class="post-list-link" href="/opensource-docker-n-java-projects/">【译文】Java项目与Docker</a></li><li class="post-list-item"><a class="post-list-link" href="/build-my-site-3/">【debug.life构建手记】 ( 三 ) Docker化本站</a></li><li class="post-list-item"><a class="post-list-link" href="/build-my-site-2/">【debug.life构建手记】 ( 二 ) Hexo静态博客搭建及配置</a></li><li class="post-list-item"><a class="post-list-link" href="/build-micro-service-with-java/">【译文】使用Java构建微服务</a></li><li class="post-list-item"><a class="post-list-link" href="/build-my-site-1/">【debug.life构建手记】 ( 一 ) 基础设施搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/Docker-difference-between-container-n-vms/">【译文】Docker:容器与虚拟机的差异</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://notebook.debug.life/tree" title="Notebook" target="_blank">Notebook</a><ul></ul><a href="http://jupyter.debug.life/" title="Jupyter" target="_blank">Jupyter</a><ul></ul><a href="http://www.lancezhange.com/" title="Hexo大牛" target="_blank">Hexo大牛</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© <a href="/." rel="nofollow">Coders' Lab.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.1" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.1" async></script><link rel="stylesheet" type="text/css" href="/css/jquery.fancybox.css?v=0.1"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?4492c5298a95d05e162aa9bd5f8b145b";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.1"></script><script type="text/javascript" src="/js/smartresize.js?v=0.1"></script></div></body></html>

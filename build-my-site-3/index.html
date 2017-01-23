@@ -1,0 +1,157 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="AI rules.."><title>【debug.life构建手记】 ( 三 ) Docker化本站 | Coders' Lab</title><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/5.0.0/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/grids-responsive-min.css"><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.1"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">【debug.life构建手记】 ( 三 ) Docker化本站</h1><a id="logo" href="/.">Coders' Lab</a><p class="description">focus on AI</p></div><div id="nav-menu"><a href="/"><i class="fa icon-home"> 首页</i></a><a href="/ai_notes_html/"><i class="fa icon-tree"> AI笔记</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">【debug.life构建手记】 ( 三 ) Docker化本站</h1><div class="post-meta">Feb 1, 2016<span> | </span><span class="category"><a href="/categories/Tools/">Tools</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> Hits</span></span></div><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker"><span class="toc-number">1.1.</span> <span class="toc-text">Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker与本站"><span class="toc-number">1.2.</span> <span class="toc-text">Docker与本站</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-number">2.</span> <span class="toc-text">准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装Docker"><span class="toc-number">2.1.</span> <span class="toc-text">安装Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置阿里仓库下载加速器"><span class="toc-number">2.2.</span> <span class="toc-text">配置阿里仓库下载加速器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#选择镜像"><span class="toc-number">2.3.</span> <span class="toc-text">选择镜像</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置Nginx"><span class="toc-number">3.</span> <span class="toc-text">配置Nginx</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#启动容器"><span class="toc-number">3.1.</span> <span class="toc-text">启动容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重启nginx"><span class="toc-number">3.2.</span> <span class="toc-text">重启nginx</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#遇到的问题"><span class="toc-number">3.3.</span> <span class="toc-text">遇到的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">3.4.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="post-content"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><p>Docker是一种虚拟化技术，说到虚拟化，可能很多人都用过各种VM产品，VirtualBox、VMware、Xen、KVM等等。</p>
+<p>那它和传统的虚拟化技术有什么不同呢？参考<a href="http://dockerpool.com/static/books/docker_practice/index.html" target="_blank" rel="external">Docker —— 从入门到实践</a>中的一个表格：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">特性</th>
+<th style="text-align:center">容器</th>
+<th style="text-align:center">虚拟机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">启动</td>
+<td style="text-align:center">秒级</td>
+<td style="text-align:center">分钟级</td>
+</tr>
+<tr>
+<td style="text-align:left">硬盘使用</td>
+<td style="text-align:center">一般为 MB</td>
+<td style="text-align:center">一般为 GB</td>
+</tr>
+<tr>
+<td style="text-align:left">性能</td>
+<td style="text-align:center">接近原生</td>
+<td style="text-align:center">弱于</td>
+</tr>
+<tr>
+<td style="text-align:left">系统支持量</td>
+<td style="text-align:center">单机支持上千个容器</td>
+<td style="text-align:center">一般几十个</td>
+</tr>
+</tbody>
+</table>
+<p>除了超级轻量这个特点，Docker在这两年火得一塌糊涂，很大原因是它直击了IT行业的几个痛点：</p>
+<ul>
+<li>在开发测试阶段，它在开发工作流程优化上的影响力是其他工具难以企及的。</li>
+<li>在架构设计方面，它和微服务等思想的出现和推广，使分布式应用设计更加普及了。</li>
+<li>降低云环境的搭建门槛(技术上和资金上)，成为云环境的技术标准，使云技术应用遍地开花，以致于连它发源公司的Paas平台dotCloud也宣布了破产并将于本月底关闭。</li>
+</ul>
+<p>以上几点是个人浅见，另外关于Docker的介绍实在太多了，随处可见，我在此就不再多说。如果还有同学不知道Docker为何物，可以看一下这几篇文章了解一下它的吸引力何在：<a href="http://dockone.io/article/389" target="_blank" rel="external">《Docker五大优势：持续集成、版本控制、可移植性、隔离性和安全性》</a> 、<a href="http://dockone.io/article/126" target="_blank" rel="external">《八个Docker的真实应用场景》</a>。</p>
+<h3 id="Docker与本站"><a href="#Docker与本站" class="headerlink" title="Docker与本站"></a>Docker与本站</h3><p>前面说过，我之所以购置阿里云ECS不止是开一个小博客，更是因为想在云上开展一些小实验，而这些实验应用我是打算在Docker容器中跑的，而Docker容器又需要一个编排系统来有序管理。所以我选用了Openshift，它集成了Google的kubernetes的强大，又有一套可视化界面来管理。</p>
+<blockquote>
+<p>OpenShift 是由红帽公司推出的 PaaS 云计算平台，供用户创建网络应用（App、网站）。</p>
+<p>由 <a href="https://github.com/openshift/origin" target="_blank" rel="external">OpenShift Origin</a>管理，支持github，开发者可以使用Git来发布自己的web应用程序到平台上。 —— <a href="https://zh.wikipedia.org/wiki/OpenShift" target="_blank" rel="external">Wikipedia</a></p>
+</blockquote>
+<p>前两天在ECS上用Openshift Origin的时候，发现总是有些容器运行的时候报<code>Command not found</code>的错误,Google了一轮之后还是无解，我猜可能是Docker版本过低造成的，因为我最初选ECS的系统盘时，选了CentOS 6.5 , 而CentOS 6支持的最高Docker版本是1.7.1，而最新的Docker都到1.9.x了。</p>
+<p>于是，我就痛下决心把系统也换了，升级到CentOS 7试试看。还好阿里云换个系统还是挺方便，官方文档有<a href="https://help.aliyun.com/knowledge_detail/5974444.html?pos=1" target="_blank" rel="external">详细介绍</a>，而且刚好他们1月16号有邮件通知说免费升级系统盘，现在默认最小容量是40G了（我之前刚买的时候只有20G）。哈哈，这等巧事也让我遇上了。</p>
+<p>在做好了必要的备份后，我换系统的过程花了10分钟不到。接下来我想，干脆就趁着这机会把ECS上全部服务都容器化好了，之后把自建的镜像push到DockerHub上，以后再怎么迁移更换系统也是分钟级能完成的事。</p>
+<p>而服务器上最基础的服务是为这个博客的HTTP服务：Openresty(Nginx)，第一个要重新部署的非它莫属了。于是，便有了本篇笔记，讲述本站点的HTTP服务容器化过程。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h3><p>换好系统之后啥都没管，第一件事就是把Docker装上看看，按照Docker<a href="https://docs.docker.com/engine/installation/centos/" target="_blank" rel="external">官方安装文档</a>配好yum源，<code>yum install docker-engine</code>之后，看了看docker的版本，果然已经是1.9.1了（经过一番测试，之前的<code>Command not found</code>错误也消失了。</p>
+<p>安装过程很简单，按上边的官方文档链接来即可。</p>
+<h3 id="配置阿里仓库下载加速器"><a href="#配置阿里仓库下载加速器" class="headerlink" title="配置阿里仓库下载加速器"></a>配置阿里仓库下载加速器</h3><p>在国内玩过Docker的人肯定都会被国内的网络恶心过，pull一个镜像可能网络中断好几次才艰难地完成。还好在ECS上玩有阿里云提供的<a href="https://help.aliyun.com/knowledge_detail/5974865.html" target="_blank" rel="external">容器Hub服务</a>，还有<a href="http://console.d.aliyun.com/index2.html/?spm=0.0.0.0.Xx1dX0#/docker/booster" target="_blank" rel="external">加速器</a>。我使用了以下命令设置了阿里的仓库：</p>
+<pre><code class="sh">sudo cp -n /lib/systemd/system/docker.service /etc/systemd/system/docker.service
+sudo sed -i &quot;s|ExecStart=/usr/bin/docker daemon|ExecStart=/usr/bin/docker daemon --registry-mirror=https://nn5nu75o.mirror.aliyuncs.com|g&quot; /etc/systemd/system/docker.service
+sudo systemctl daemon-reload
+sudo service docker restart
+</code></pre>
+<p>设好了之后镜像下载速度咻咻地上去了，大部分常用的镜像像是在内网下载的感觉。</p>
+<h3 id="选择镜像"><a href="#选择镜像" class="headerlink" title="选择镜像"></a>选择镜像</h3><p>由于时间有限，我这次没从基础镜像自行编译Openresty，而是直接在DockerHub上找了一个已经装好Openresty 1.9.3的镜像<a href="https://hub.docker.com/r/ficusio/openresty/" target="_blank" rel="external">ficusio/openresty</a>。</p>
+<pre><code class="sh">docker pull ficusio/openresty
+</code></pre>
+<h2 id="配置Nginx"><a href="#配置Nginx" class="headerlink" title="配置Nginx"></a>配置Nginx</h2><p>现在镜像已经拉取到ECS上了，现在需要把原来在<a href="https://debug.life/2016/01/16/build-my-site-1/#u5B89_u88C5Openresty">基础设施搭建</a>中配置好的Nginx conf文件和证书文件都复制出来，专门给之后要启的容器使用。</p>
+<pre><code class="sh">[userx@localhost blog]$ pwd
+/home/userx/blog
+[userx@localhost blog]$ ls
+conf  contents  logs  start.sh
+
+# conf下的直接是原Nginx配置文件
+[userx@localhost blog]$ ls conf/
+conf.d                fastcgi_params.default  mime.types.default  scgi_params.default   win-utf
+fastcgi.conf          koi-utf                 nginx.conf          ssl
+fastcgi.conf.default  koi-win                 nginx.conf.default  uwsgi_params
+fastcgi_params        mime.types              scgi_params         uwsgi_params.default
+
+# Hexo生成的文件
+[userx@localhost blog]$ ls contents/
+Linux-ops  atom.xml    fancybox     fonts.bak   js          sitemap.xml
+404    about      categories  favicon.ico  images      playground  subscribe
+CNAME  archives   css         fonts        index.html  ppt         tags
+</code></pre>
+<p>其中<code>conf</code>是原来nginx中的<code>conf</code>，<code>conf/ssl</code>中包含了配置https须使用的<code>key</code>和<code>crt</code>文件，contents下是网站的静态文件，logs是将要挂载到容器中的目录。</p>
+<p>下边看一下<code>start.sh</code>文件，它是启动容器的脚本：</p>
+<pre><code class="sh">#!/usr/bin/env bash
+
+docker run -d \
+  --name blog \
+  -p 80:80 \
+  -p 443:443 \
+  -v &quot;$(pwd)/conf&quot;:/opt/openresty/nginx/conf \
+  -v &quot;$(pwd)/contents&quot;:/home/userx/debug.life \
+  -v &quot;$(pwd)/logs&quot;:/opt/openresty/nginx/logs \
+  ficusio/openresty &quot;$@&quot;
+</code></pre>
+<p>这里用到了docker run的几个参数，在官方文档都能看到。<br>这里大概描述一下几个主要参数的作用：</p>
+<ul>
+<li><code>-d</code> 是 <code>detach</code>的缩写，使用它会以后台运行的方式启动容器；另外Docker还有<code>attach</code>命令，是把命令行窗口重新关联到容器。类比一下执行普通长进程时，按了<code>Ctrl+z</code>就是<code>detach</code>，输入<code>fg</code>相当于<code>attach</code>。</li>
+<li><code>-p</code>是端口映射，<code>-p 宿主机端口:容器端口</code>这样就能把容器的端口映射到宿主机上。</li>
+<li><code>-v</code>是挂载文件卷，<code>-v 宿主机路径:容器路径</code>这样可以把宿主机的一个路径挂到容器中，相当于共享盘。</li>
+</ul>
+<p>这个命令传这些参数都是特定的，因为在<code>ficusio/openresty</code>镜像中，Openresty安装在<code>/opt/openresty</code>下，所以把当前目录的<code>conf</code>目录挂载到<code>/opt/openresty/nginx/conf</code>，这样启动容器时nginx就能读到我的配置；</p>
+<p>而<code>contents</code>目录挂载到<code>/home/userx/debug.life</code>是因为我在一开始配置nginx的时候，站点的root就指向了<code>/home/userx/debug.life</code>，我这里完全没有更改旧的nginx配置，所以直接挂载就好；</p>
+<p>而<code>logs</code>同理。</p>
+<h3 id="启动容器"><a href="#启动容器" class="headerlink" title="启动容器"></a>启动容器</h3><p>上边的脚本名称那么明显，分明就是用来启动的嘛~所以这样执行一下即可:</p>
+<pre><code class="sh">[userx@localhost blog]$ ./start.sh
+</code></pre>
+<p>查看容器是否已经启动</p>
+<pre><code class="sh">
+[userx@localhost ~]# docker ps
+CONTAINER ID        IMAGE                         COMMAND                  CREATED             STATUS              PORTS                                      NAMES
+a69791da83fd        ficusio/openresty             &quot;nginx -g &#39;daemon off&quot;   2 hours ago         Up About an hour    0.0.0.0:80-&gt;80/tcp, 0.0.0.0:443-&gt;443/tcp   blog
+</code></pre>
+<p>顺道看一下系统中的状态：</p>
+<pre><code class="sh">
+# 可以看到80和443端口正在监听，关联的进程叫docker-proxy
+[userx@localhost ~]# netstat -anp|grep 443|grep proxy
+tcp        0      0 192.168.0.1:35667       192.168.0.4:443         ESTABLISHED 11805/docker-proxy
+tcp6       0      0 :::443                  :::*                    LISTEN      11805/docker-proxy
+tcp6       0      0 139.196.11.160:443      42.88.73.13:12541       ESTABLISHED 11805/docker-proxy
+
+[userx@localhost ~]# netstat -anp|grep 80|grep proxy
+tcp        0      0 192.168.0.1:35671       192.168.0.4:443         ESTABLISHED 11805/docker-proxy
+tcp6       0      0 :::443                  :::*                    LISTEN      11805/docker-proxy
+tcp6       0      0 :::80                   :::*                    LISTEN      11814/docker-proxy
+tcp6       0      0 139.196.11.160:443      42.88.73.13:12558       ESTABLISHED 11805/docker-proxy
+unix  2      [ ]         DGRAM                    1420960  11805/docker-proxy
+
+# 是的，这样在宿主机能看到docker容器中的进程
+[userx@localhost ~]# ps aux|grep nginx
+userx     11820  0.0  0.2  22172  3960 ?        Ss   18:45   0:00 nginx: master process nginx -g daemon off; error_log /dev/stderr info;
+65534    11826  0.0  0.1  22956  3396 ?        S    18:45   0:00 nginx: worker process
+userx     17433  0.0  0.0 112616   736 pts/0    S+   20:08   0:00 grep --color=auto nginx
+</code></pre>
+<h3 id="重启nginx"><a href="#重启nginx" class="headerlink" title="重启nginx"></a>重启nginx</h3><p>nginx正在跑了，网站也能正常访问了，那如果之后需要修改nginx的配置，要怎么操作呢？</p>
+<p>很简单，前边说到，在<code>conf</code>中的任何更改都会体现到容器中，所以在宿主机上直接修改即可。</p>
+<p>但是重启nginx就不能像普通那样用<code>nginx -s reload</code>了，因为你无法直接操作到容器中的文件，需要把整个容器重启：</p>
+<pre><code class="sh">docker restart blog
+</code></pre>
+<p>这样重启容器就相当于是重启“机器”了，这里最后一个参数是哪来的呢，好像哪里见过？对，就是刚刚脚本里启动容器时通过<code>–name blog</code>给容器指定的名称。</p>
+<h3 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h3><p>在启动的过程中，Docker容器的端口映射实际是用了iptables的nat来实现的，所以如果iptables中没有相关配置就会出错，需要在<code>/etc/sysconfig/iptables</code>中添加：</p>
+<pre><code class="sh">*nat
+:PREROUTING ACCEPT [27:11935]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [598:57368]                                                                  8,3           All
+:POSTROUTING ACCEPT [591:57092]
+:DOCKER - [0:0]
+-A PREROUTING -m addrtype --dst-type LOCAL -j DOCKER
+COMMIT
+</code></pre>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>至此，你现在所看到的页面已经是运行在Docker容器上的了，但是上边的整个配置仅仅是实现在Docker容器中代理一个静态网站，如果要使用这个nginx实现反向代理主机的服务呢,甚至是反向代理到其他容器呢？那又是另一回事了。容器之间的网络通讯是目前原生Docker支持得还不够完善的一个方面，在之后我可能会用到Kubernetes来实现nginx反向代理到其他容器服务，把相关容器放在同一个pod中。最终实现前边说的一个目的，把ECS上的所有服务都容器化。</p>
+</div><script type="text/javascript" src="/js/share.js?v=0.1" async></script><a data-url="http://ai-code.tech/build-my-site-3/" data-id="ciy9g3piq001ik4tt4l2yxp99" class="article-share-link">分享到</a><div class="tags"><a href="/tags/Docker/">Docker</a><a href="/tags/Openresty/">Openresty</a></div><div class="post-nav"><a href="/opensource-docker-n-java-projects/" class="pre">【译文】Java项目与Docker</a><a href="/build-my-site-2/" class="next">【debug.life构建手记】 ( 二 ) Hexo静态博客搭建及配置</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Translation/">Translation</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/Mac-OS-X/" style="font-size: 15px;">Mac OS X</a> <a href="/tags/Docker/" style="font-size: 15px;">Docker</a> <a href="/tags/Openresty/" style="font-size: 15px;">Openresty</a> <a href="/tags/Aliyun/" style="font-size: 15px;">Aliyun</a> <a href="/tags/https/" style="font-size: 15px;">https</a> <a href="/tags/Nginx/" style="font-size: 15px;">Nginx</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/build-with-docker/">用Docker容器编译软件</a></li><li class="post-list-item"><a class="post-list-link" href="/startup-micro-service-with-ruby/">【译文】使用Ruby on Rails和Docker开始微服务之旅</a></li><li class="post-list-item"><a class="post-list-link" href="/what-would-docker-bring-to-your-team/">【译文】Docker会给你的开发团队带来什么变化？</a></li><li class="post-list-item"><a class="post-list-link" href="/how-to-use-docker-to-build-mapr-cluster/">【译文】如何使用Docker创建开箱即用的MapR集群</a></li><li class="post-list-item"><a class="post-list-link" href="/opensource-docker-n-java-projects/">【译文】Java项目与Docker</a></li><li class="post-list-item"><a class="post-list-link" href="/build-my-site-3/">【debug.life构建手记】 ( 三 ) Docker化本站</a></li><li class="post-list-item"><a class="post-list-link" href="/build-my-site-2/">【debug.life构建手记】 ( 二 ) Hexo静态博客搭建及配置</a></li><li class="post-list-item"><a class="post-list-link" href="/build-micro-service-with-java/">【译文】使用Java构建微服务</a></li><li class="post-list-item"><a class="post-list-link" href="/build-my-site-1/">【debug.life构建手记】 ( 一 ) 基础设施搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/Docker-difference-between-container-n-vms/">【译文】Docker:容器与虚拟机的差异</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://notebook.debug.life/tree" title="Notebook" target="_blank">Notebook</a><ul></ul><a href="http://jupyter.debug.life/" title="Jupyter" target="_blank">Jupyter</a><ul></ul><a href="http://www.lancezhange.com/" title="Hexo大牛" target="_blank">Hexo大牛</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">© <a href="/." rel="nofollow">Coders' Lab.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.1" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.1" async></script><link rel="stylesheet" type="text/css" href="/css/jquery.fancybox.css?v=0.1"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?4492c5298a95d05e162aa9bd5f8b145b";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.1"></script><script type="text/javascript" src="/js/smartresize.js?v=0.1"></script></div></body></html>
